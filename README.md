@@ -20,3 +20,5 @@ cd clock-weather-widget
 npm install
 npm run build:win
 
+💝 Поддержать
+☕ CloudTips https://pay.cloudtips.ru/p/eb970129?spm=a2ty_o01.29997173.0.0.22fd55fbgh3a8P
