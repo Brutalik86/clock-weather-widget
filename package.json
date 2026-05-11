@@ -1,6 +1,6 @@
 {
   "name": "clock-weather-widget",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Минималистичный виджет часов и погоды с системой тем",
   "main": "main.js",
   "author": "Виталий Стратиенко <dev@itbrutalik.ru>",

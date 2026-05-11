@@ -6,5 +6,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
   closeApp: () => ipcRenderer.send('close-app'),
   setAlwaysOnTop: (value) => ipcRenderer.send('set-always-on-top', value),
   setOpacity: (value) => ipcRenderer.send('set-opacity', value),
-  setWindowSize: (isMinimal) => ipcRenderer.send('set-window-size', isMinimal)
+  setWindowSize: (isMinimal) => ipcRenderer.send('set-window-size', isMinimal),
+  onResize: (callback) => ipcRenderer.on('resize', callback) // ✅ Добавьте эту строку
 });

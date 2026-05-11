@@ -42,22 +42,80 @@ body { font-family: var(--font-main); background: transparent; overflow: hidden;
 #feels-like { font-size: 12px; color: var(--text-secondary); margin-top: 4px; opacity: 0.7; }
 .weather-extra { display: flex; gap: 15px; font-size: 11px; color: var(--text-secondary); margin-top: 4px; }
 
-body.minimal #widget { padding: 10px 15px; flex-direction: row; align-items: center; border-radius: var(--radius-sm); justify-content: space-between; }
-body.minimal .clock-section { margin: 0; display: flex; align-items: center; }
-body.minimal #time { font-size: 28px; letter-spacing: 1px; }
-body.minimal #seconds { font-size: 16px; }
-body.minimal #date { display: none; }
-body.minimal .weather-section { flex: 1; justify-content: flex-end; gap: 10px; padding: 0; }
-body.minimal .weather-left { display: none; }
-body.minimal .weather-info { flex-direction: row; align-items: center; gap: 8px; }
-body.minimal #temperature { font-size: 20px; }
-body.minimal #weather-desc { display: none; }
-body.minimal .weather-right { text-align: left; }
-body.minimal #city-name { font-size: 12px; margin-top: 0; }
-body.minimal #feels-like, body.minimal .weather-extra { display: none; }
-body.minimal #header-controls { top: 8px; right: 8px; }
-body.minimal .ctrl-btn { width: 20px; height: 20px; font-size: 10px; }
+/* ===== МИНИМАЛИСТИЧНЫЙ ВИД (300×50px) ===== */
+body.minimal #widget {
+  padding: 0 !important;          /* Убираем отступы, чтобы контент точно влезал */
+  width: 300px !important;        /* Жёсткая ширина */
+  height: 50px !important;        /* Жёсткая высота */
+  flex-direction: row !important;
+  align-items: center !important;
+  border-radius: 8px !important;
+  justify-content: space-between !important;
+  box-sizing: border-box !important;
+  -webkit-app-region: drag;       /* Весь виджет перетаскивается */
+  overflow: visible !important;   /* ⚠️ ВАЖНО: не обрезаем hit-area */
+}
 
+/* Контейнер кнопок: принудительно вырываем из drag-региона */
+body.minimal #header-controls {
+  position: absolute;
+  top: 2px !important;
+  right: 4px !important;
+  z-index: 999;
+  display: flex;
+  gap: 4px;
+  -webkit-app-region: no-drag !important;
+  pointer-events: auto !important;
+}
+
+body.minimal .ctrl-btn {
+  width: 18px !important;
+  height: 18px !important;
+  font-size: 9px !important;
+  opacity: 0;
+  transition: opacity 0.2s;
+  cursor: pointer !important;
+  -webkit-app-region: no-drag !important;
+  pointer-events: auto !important;
+  border-radius: 50% !important;
+}
+body.minimal #widget:hover .ctrl-btn { opacity: 1; }
+
+/* Контент внутри: оставляем drag на фоне, но разрешаем выделение/клики где нужно */
+body.minimal .clock-section,
+body.minimal .weather-section {
+  margin: 0 !important;
+  padding: 0 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  -webkit-app-region: no-drag !important; /* Разрешаем клики по тексту/иконкам */
+  pointer-events: auto !important;
+}
+
+body.minimal #time { font-size: 22px !important; letter-spacing: 2px !important; line-height: 1 !important; }
+body.minimal #seconds { font-size: 14px !important; }
+body.minimal #date { display: none !important; }
+
+body.minimal .weather-left { display: none !important; }
+body.minimal .weather-info { flex-direction: row !important; gap: 6px !important; }
+body.minimal #temperature { font-size: 18px !important; line-height: 1 !important; }
+body.minimal #weather-desc { display: none !important; }
+body.minimal #feels-like, body.minimal .weather-extra { display: none !important; }
+
+body.minimal #city-name {
+  font-size: 11px !important;
+  margin: 0 !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 110px;
+}
+
+body.minimal #settings-panel,
+body.minimal #settings-panel.visible,
+body.minimal #eve-logo { display: none !important; }
+
+/* ===== НАСТРОЙКИ ===== */
 #settings-panel {
   position: absolute; top: 0; left: 0; right: 0; bottom: 0;
   background: var(--bg-panel); backdrop-filter: blur(var(--blur));

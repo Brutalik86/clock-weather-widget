@@ -1,7 +1,5 @@
 let config = { city: '', timezone: 'auto', format: '24', alwaysOnTop: true, opacity: 0.95, minimal: false };
-function loadConfig() { 
-  try { const s = localStorage.getItem('widget-config'); if (s) config = { ...config, ...JSON.parse(s) }; } catch (e) {} 
-}
+function loadConfig() { try { const s = localStorage.getItem('widget-config'); if (s) config = { ...config, ...JSON.parse(s) }; } catch (e) {} }
 function saveConfig() { localStorage.setItem('widget-config', JSON.stringify(config)); }
 loadConfig();
 
@@ -129,11 +127,27 @@ document.getElementById('opacity-slider').addEventListener('input', e=>{
   if(window.electronAPI) window.electronAPI.setOpacity(v); 
 });
 
+// 🔥 Обработчик изменения размера окна (синхронизация с main process)
 if(window.electronAPI) {
   window.electronAPI.openSettings(()=>openSettings());
   window.electronAPI.refreshWeather(()=>fetchWeather());
   window.electronAPI.setOpacity(config.opacity||0.95);
-  if(config.minimal) { window.electronAPI.setWindowSize(true); document.body.classList.add('minimal'); }
+  
+  window.electronAPI.onResize((event, isMinimal) => {
+    document.body.classList.toggle('minimal', isMinimal);
+    // Принудительный перерасчёт стилей для Chromium
+    const widget = document.getElementById('widget');
+    if(widget) {
+      widget.style.transform = 'scale(0.999)';
+      widget.offsetHeight; // trigger reflow
+      widget.style.transform = '';
+    }
+  });
+
+  if(config.minimal) { 
+    window.electronAPI.setWindowSize(true); 
+    document.body.classList.add('minimal'); 
+  }
 }
 
 fetchWeather(); setInterval(fetchWeather, 600000);

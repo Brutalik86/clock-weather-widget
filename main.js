@@ -4,9 +4,6 @@ const path = require('path');
 let mainWindow = null;
 let tray = null;
 
-/**
- * Создание главного окна виджета
- */
 function createWindow() {
   const { width: screenWidth, height: screenHeight } = screen.getPrimaryDisplay().workArea;
 
@@ -32,9 +29,6 @@ function createWindow() {
   mainWindow.on('closed', () => { mainWindow = null; });
 }
 
-/**
- * Создание иконки в системном трее
- */
 function createTray() {
   const iconPath = path.join(__dirname, 'assets', 'icon.png');
   let trayIcon;
@@ -54,7 +48,7 @@ function createTray() {
         const { dialog } = require('electron');
         dialog.showMessageBox(mainWindow, {
           type: 'info', title: 'О программе', 
-          message: 'ClockAndWeather v1.2.0',
+          message: 'ClockAndWeather v1.2.1',
           detail: 'Разработчик: Виталий Стратиенко\nСайт: itbrutalik.ru',
           buttons: ['OK']
         });
@@ -83,9 +77,15 @@ ipcMain.on('set-always-on-top', (event, value) => {
 ipcMain.on('set-window-size', (event, isMinimal) => {
   if (!mainWindow) return;
   try {
-    if (isMinimal) mainWindow.setSize(300, 50);
-    else mainWindow.setSize(420, 280);
+    if (isMinimal) {
+      mainWindow.setSize(300, 50, true);
+      mainWindow.setMinimumSize(300, 50);
+    } else {
+      mainWindow.setSize(420, 280, true);
+      mainWindow.setMinimumSize(420, 280);
+    }
     
+    // Корректировка позиции
     const { width: sw, height: sh } = screen.getPrimaryDisplay().workArea;
     const [x, y] = mainWindow.getPosition();
     const [w, h] = mainWindow.getSize();
@@ -93,6 +93,13 @@ ipcMain.on('set-window-size', (event, isMinimal) => {
     if (x + w > sw) newX = sw - w - 10;
     if (y + h > sh) newY = sh - h - 10;
     if (newX !== x || newY !== y) mainWindow.setPosition(newX, newY);
+    
+    // 🔥 Ключевое исправление: даём Electron 50мс на пересчёт hit-тестов прозрачного окна
+    setTimeout(() => {
+      if (mainWindow && !mainWindow.isDestroyed()) {
+        mainWindow.webContents.send('resize', isMinimal);
+      }
+    }, 50);
   } catch (err) { console.error('Resize error:', err); }
 });
 
