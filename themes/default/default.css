@@ -1,0 +1,17 @@
+:root {
+  --bg-primary: linear-gradient(135deg, rgba(30, 30, 50, 0.9), rgba(15, 15, 35, 0.95));
+  --bg-panel: rgba(20, 20, 40, 0.98);
+  --border-color: rgba(255, 255, 255, 0.1);
+  --shadow-color: rgba(0, 0, 0, 0.4);
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.5);
+  --accent: #4a7fff;
+  --accent-hover: #6b5bff;
+  --glow: rgba(100, 180, 255, 0.3);
+  --radius: 20px;
+  --radius-sm: 8px;
+  --blur: 20px;
+  --font-main: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  --btn-bg: rgba(255, 255, 255, 0.08);
+  --input-bg: rgba(255, 255, 255, 0.08);
+}
