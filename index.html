@@ -35,6 +35,28 @@
       </div>
     </div>
 
+    <!-- 🔥 Подсказка для мини-режима (появляется при наведении) -->
+    <div id="mini-hint" style="
+      position: absolute;
+      bottom: -25px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      padding: 4px 10px;
+      font-size: 10px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+      z-index: 200;
+      box-shadow: 0 4px 12px var(--shadow-color);
+    ">
+      ⌨️ Ctrl+O — настройки
+    </div>
+
     <!-- ПАНЕЛЬ НАСТРОЕК -->
     <div id="settings-panel">
       <div style="display:flex;justify-content:space-between;align-items:center;">
@@ -70,7 +92,32 @@
         <input type="checkbox" id="always-top" checked><label for="always-top">Поверх окон</label>
       </div>
       <div class="checkbox-group">
-        <input type="checkbox" id="minimal-mode"><label for="minimal-mode">📐 Мини (300x50px)</label>
+        <input type="checkbox" id="minimal-mode"><label for="minimal-mode">📐 Мини (300×50px)</label>
+      </div>
+
+      <!-- 🔥 СКВОЗНЫЕ КЛИКИ -->
+      <div class="checkbox-group">
+        <input type="checkbox" id="ignore-clicks-mode"><label for="ignore-clicks-mode">👻 Сквозные клики</label>
+      </div>
+      <div style="font-size: 10px; color: var(--text-dim); margin-left: 24px; margin-bottom: 8px;">
+        Клики проходят сквозь окно. Используйте <strong>Ctrl+O</strong> для настроек.
+      </div>
+
+      <!-- 🔥 Блок горячих клавиш -->
+      <div class="hotkeys-section" style="margin: 15px 0; padding: 12px; background: var(--btn-bg); border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+        <div style="font-size: 11px; font-weight: 600; color: var(--accent); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">
+          ⌨️ Горячие клавиши
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="color: var(--text-secondary);">Открыть настройки</span>
+            <kbd style="background: var(--input-bg); border: 1px solid var(--border-color); padding: 2px 8px; border-radius: 4px; font-family: monospace; color: var(--accent);">Ctrl + O</kbd>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="color: var(--text-secondary);">Закрыть приложение</span>
+            <kbd style="background: var(--input-bg); border: 1px solid var(--border-color); padding: 2px 8px; border-radius: 4px; font-family: monospace; color: var(--accent);">Ctrl + E</kbd>
+          </div>
+        </div>
       </div>
 
       <div class="settings-group">
@@ -97,7 +144,7 @@
       <div class="author-footer">
         <div style="font-size:11px;color:var(--text-secondary);line-height:1.5;">
           Разработано: <strong style="color:var(--accent);">Виталий Стратиенко</strong><br>
-          <a href="https://itbrutalik.ru" target="_blank">itbrutalik.ru</a> • v1.2.1
+          <a href="https://itbrutalik.ru" target="_blank">itbrutalik.ru</a> • v1.3.1
         </div>
       </div>
     </div>

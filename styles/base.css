@@ -44,59 +44,44 @@ body { font-family: var(--font-main); background: transparent; overflow: hidden;
 
 /* ===== МИНИМАЛИСТИЧНЫЙ ВИД (300×50px) ===== */
 body.minimal #widget {
-  padding: 0 !important;          /* Убираем отступы, чтобы контент точно влезал */
-  width: 300px !important;        /* Жёсткая ширина */
-  height: 50px !important;        /* Жёсткая высота */
+  padding: 0 !important;
+  width: 300px !important;
+  height: 50px !important;
   flex-direction: row !important;
   align-items: center !important;
   border-radius: 8px !important;
   justify-content: space-between !important;
   box-sizing: border-box !important;
-  -webkit-app-region: drag;       /* Весь виджет перетаскивается */
-  overflow: visible !important;   /* ⚠️ ВАЖНО: не обрезаем hit-area */
+  -webkit-app-region: drag;
+  overflow: visible !important;
 }
 
-/* Контейнер кнопок: принудительно вырываем из drag-региона */
-body.minimal #header-controls {
-  position: absolute;
-  top: 2px !important;
-  right: 4px !important;
-  z-index: 999;
-  display: flex;
-  gap: 4px;
-  -webkit-app-region: no-drag !important;
-  pointer-events: auto !important;
-}
-
-body.minimal .ctrl-btn {
-  width: 18px !important;
-  height: 18px !important;
-  font-size: 9px !important;
-  opacity: 0;
-  transition: opacity 0.2s;
-  cursor: pointer !important;
-  -webkit-app-region: no-drag !important;
-  pointer-events: auto !important;
-  border-radius: 50% !important;
-}
-body.minimal #widget:hover .ctrl-btn { opacity: 1; }
-
-/* Контент внутри: оставляем drag на фоне, но разрешаем выделение/клики где нужно */
-body.minimal .clock-section,
-body.minimal .weather-section {
+body.minimal .clock-section {
   margin: 0 !important;
-  padding: 0 10px !important;
   display: flex !important;
   align-items: center !important;
-  -webkit-app-region: no-drag !important; /* Разрешаем клики по тексту/иконкам */
+  gap: 8px;
+  padding: 0 8px;
+  -webkit-app-region: no-drag !important;
   pointer-events: auto !important;
 }
-
 body.minimal #time { font-size: 22px !important; letter-spacing: 2px !important; line-height: 1 !important; }
 body.minimal #seconds { font-size: 14px !important; }
 body.minimal #date { display: none !important; }
 
 body.minimal .weather-left { display: none !important; }
+body.minimal .weather-section {
+  flex: 1 !important;
+  justify-content: flex-end !important;
+  gap: 6px !important;
+  padding: 0 8px !important;
+  margin: 0 !important;
+  border: none !important;
+  display: flex !important;
+  align-items: center !important;
+  -webkit-app-region: no-drag !important;
+  pointer-events: auto !important;
+}
 body.minimal .weather-info { flex-direction: row !important; gap: 6px !important; }
 body.minimal #temperature { font-size: 18px !important; line-height: 1 !important; }
 body.minimal #weather-desc { display: none !important; }
@@ -108,12 +93,47 @@ body.minimal #city-name {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 110px;
+  max-width: 90px;
 }
 
 body.minimal #settings-panel,
 body.minimal #settings-panel.visible,
 body.minimal #eve-logo { display: none !important; }
+
+body.minimal #header-controls {
+  top: 2px !important;
+  right: 4px !important;
+  z-index: 999;
+  -webkit-app-region: no-drag !important;
+  pointer-events: auto !important;
+}
+body.minimal .ctrl-btn {
+  width: 18px !important;
+  height: 18px !important;
+  font-size: 9px !important;
+  opacity: 0;
+  transition: opacity 0.2s;
+  cursor: pointer !important;
+  -webkit-app-region: no-drag !important;
+  pointer-events: auto !important;
+}
+body.minimal #widget:hover .ctrl-btn { opacity: 1; }
+
+/* ===== HOTKEYS HINT (Mini mode) ===== */
+body.minimal #widget:hover #mini-hint {
+  opacity: 1;
+}
+
+/* Стили для <kbd> в настройках */
+.settings-group kbd {
+  background: var(--input-bg);
+  border: 1px solid var(--border-color);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 11px;
+  color: var(--accent);
+}
 
 /* ===== НАСТРОЙКИ ===== */
 #settings-panel {

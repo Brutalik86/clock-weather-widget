@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, screen, Tray, Menu, nativeImage } = require('electron');
+const { app, BrowserWindow, ipcMain, screen, Tray, Menu, nativeImage, globalShortcut } = require('electron');
 const path = require('path');
 
 let mainWindow = null;
@@ -17,6 +17,7 @@ function createWindow() {
     alwaysOnTop: true,
     skipTaskbar: true,
     resizable: false,
+    minHeight: 280,
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
@@ -38,7 +39,7 @@ function createTray() {
   tray = new Tray(trayIcon);
   
   const contextMenu = Menu.buildFromTemplate([
-    { label: '⚙ Настройки', click: () => mainWindow?.webContents.send('open-settings') },
+    { label: '⚙ Настройки (Ctrl+O)', click: () => mainWindow?.webContents.send('open-settings') },
     { type: 'separator' },
     { label: '🔄 Обновить погоду', click: () => mainWindow?.webContents.send('refresh-weather') },
     { type: 'separator' },
@@ -48,17 +49,17 @@ function createTray() {
         const { dialog } = require('electron');
         dialog.showMessageBox(mainWindow, {
           type: 'info', title: 'О программе', 
-          message: 'ClockAndWeather v1.2.1',
-          detail: 'Разработчик: Виталий Стратиенко\nСайт: itbrutalik.ru',
+          message: 'ClockAndWeather v1.3.1',
+          detail: 'Разработчик: Виталий Стратиенко\nСайт: itbrutalik.ru\n\n⌨️ Горячие клавиши:\nCtrl+O — Настройки\nCtrl+E — Выход',
           buttons: ['OK']
         });
       }
     },
     { type: 'separator' },
-    { label: '✕ Закрыть', click: () => app.quit() }
+    { label: '✕ Закрыть (Ctrl+E)', click: () => app.quit() }
   ]);
 
-  tray.setToolTip('Часы и Погода');
+  tray.setToolTip('ClockAndWeather\n⌨️ Ctrl+O: Настройки | Ctrl+E: Выход');
   tray.setContextMenu(contextMenu);
   tray.on('double-click', () => mainWindow?.webContents.send('open-settings'));
 }
@@ -82,10 +83,9 @@ ipcMain.on('set-window-size', (event, isMinimal) => {
       mainWindow.setMinimumSize(300, 50);
     } else {
       mainWindow.setSize(420, 280, true);
-      mainWindow.setMinimumSize(420, 280);
+      mainWindow.setMinimumSize(420, 200);
     }
     
-    // Корректировка позиции
     const { width: sw, height: sh } = screen.getPrimaryDisplay().workArea;
     const [x, y] = mainWindow.getPosition();
     const [w, h] = mainWindow.getSize();
@@ -94,13 +94,19 @@ ipcMain.on('set-window-size', (event, isMinimal) => {
     if (y + h > sh) newY = sh - h - 10;
     if (newX !== x || newY !== y) mainWindow.setPosition(newX, newY);
     
-    // 🔥 Ключевое исправление: даём Electron 50мс на пересчёт hit-тестов прозрачного окна
     setTimeout(() => {
       if (mainWindow && !mainWindow.isDestroyed()) {
         mainWindow.webContents.send('resize', isMinimal);
       }
     }, 50);
   } catch (err) { console.error('Resize error:', err); }
+});
+
+// 🔥 ОБРАБОТЧИК СКВОЗНЫХ КЛИКОВ
+ipcMain.on('set-ignore-clicks', (event, ignore) => {
+  if (mainWindow) {
+    mainWindow.setIgnoreMouseEvents(ignore);
+  }
 });
 
 ipcMain.on('close-app', () => { app.quit(); });
@@ -110,6 +116,25 @@ app.whenReady().then(() => {
   createWindow();
   createTray();
 
+  // 🔥 ГОРЯЧИЕ КЛАВИШИ (Глобальные)
+  
+  // Открыть настройки (Ctrl + O)
+  globalShortcut.register('CommandOrControl+O', () => {
+    if (mainWindow) {
+      mainWindow.webContents.send('open-settings');
+      // При открытии настроек выключаем сквозные клики
+      mainWindow.setIgnoreMouseEvents(false);
+      mainWindow.webContents.send('update-ignore-clicks', false);
+      // Делаем окно активным
+      mainWindow.focus();
+    }
+  });
+
+  // Выход из приложения (Ctrl + E)
+  globalShortcut.register('CommandOrControl+E', () => {
+    app.quit();
+  });
+
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
@@ -117,4 +142,9 @@ app.whenReady().then(() => {
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
+});
+
+// Очистка горячих клавиш при выходе
+app.on('will-quit', () => {
+  globalShortcut.unregisterAll();
 });

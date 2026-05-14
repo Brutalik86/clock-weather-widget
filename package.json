@@ -1,9 +1,9 @@
 {
   "name": "clock-weather-widget",
-  "version": "1.2.1",
+  "version": "1.3.1",
   "description": "Минималистичный виджет часов и погоды с системой тем",
   "main": "main.js",
-  "author": "Виталий Стратиенко <dev@itbrutalik.ru>",
+  "author": "Виталий Стратиенко <pc-nyagan@yandex.ru>",
   "scripts": {
     "start": "electron .",
     "build": "electron-builder",
@@ -26,7 +26,7 @@
       "icon": "assets/icon.ico"
     },
     "nsis": {
-      "artifactName": "ClockAndWeather_Setup_${version}.${ext}" ,
+      "artifactName": "ClockAndWeather_Setup_${version}.${ext}",
       "oneClick": false,
       "perMachine": true,
       "allowToChangeInstallationDirectory": true,
@@ -34,7 +34,7 @@
       "createStartMenuShortcut": true
     },
     "portable": {
-      "portable": { "artifactName": "ClockAndWeather_Portable_${version}.${ext}" }
+      "artifactName": "ClockAndWeather_Portable_${version}.${ext}"
     }
   }
 }
